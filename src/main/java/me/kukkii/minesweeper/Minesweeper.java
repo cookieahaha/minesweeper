@@ -31,17 +31,17 @@ public class Minesweeper{
 
   public void setBombs(){
     for(int x=0; x<amountOfBomb; x++){
+      while(true){
         int i = (int)(Math.random()*height);
         int j = (int)(Math.random()*width);
-      while(true){
         if(admin.get(i,j) == '9'){
           continue;
         }
         else{
+          admin.set(i,j,'9');     // 9 = bomb  
           break;
         }
       }
-      admin.set(i,j,'9');     // 9 = bomb  
     }
   }
 
@@ -90,7 +90,7 @@ public class Minesweeper{
         q = q + 1;
       }
     }
-    admin.set(i,j,(char)q);
+    admin.set(i,j,(char)('0' + q));
   }
 
   public void checkAll(){
@@ -104,7 +104,7 @@ public class Minesweeper{
   public int turn(int i, int j,int k){
     if(k==1){
       if(user.get(i,j)!='X'){
-        System.out.println("dont have to frag here");
+        System.out.println("cannot put a flag here");
         return 0;
       }
       user.set(i,j,'F');
@@ -150,7 +150,7 @@ public class Minesweeper{
       return;
     }
     user.set(i,j,admin.get(i,j));
-    if(admin.get(i,j)!=0){
+    if(admin.get(i,j)!='0'){
       return;
     }
     if(i>=1 && j>=1){
