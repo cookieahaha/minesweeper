@@ -17,7 +17,19 @@ public class Minesweeper{
     admin = new Matrix(height,width,'0');
   }
 
-  public void setBomb(){
+  public int getHeight(){
+    return height;
+  }
+
+  public int getWidth(){
+    return width;
+  }
+
+  public Matrix getUser(){
+    return user;
+  }
+
+  public void setBombs(){
 
   }
 
@@ -29,7 +41,7 @@ public class Minesweeper{
 
   }
 
-  public int turn(int i, int j){
+  public int turn(int i, int j,int k){
     return 0;
   }
 
