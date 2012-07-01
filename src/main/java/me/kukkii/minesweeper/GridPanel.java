@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -22,17 +23,23 @@ public class GridPanel extends JPanel implements ActionListener  {
 
   private int height;
   private int width;
+  private int nBombs;
+
   private JButton[] buttons;
 
   private Minesweeper game;
   private Color[] colors;
+  private Color initColor;
   private Font boldFont;
 
   public GridPanel(int height, int width, int nBombs) {
     this.height = height;
     this.width = width;
-    buttons = new JButton[height * width];
+    this.nBombs = nBombs;
+
+    setPreferredSize(new Dimension(width * LEN, height * LEN));
     setLayout(new GridLayout(height, width));
+    initColors();
     try {
       // UIManager.setLookAndFeel(new MetalLookAndFeel());
       UIManager.setLookAndFeel(new SynthLookAndFeel());
@@ -40,19 +47,20 @@ public class GridPanel extends JPanel implements ActionListener  {
     // setOpaque(true);
     // setForeground(Color.GRAY);
     // setBackground(Color.GRAY);
+
+    buttons = new JButton[height * width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        JButton button = new JButton("X");
-        button.addActionListener(this);
-        button.setBackground(Color.GRAY);
-        button.setOpaque(true);
-        // button.setBorderPainted(false);
+        JButton button = new JButton();
         buttons[i * width + j] = button;
         add(button);
       }
     }
-    setPreferredSize(new Dimension(width * LEN, height * LEN));
     initGame(height, width, nBombs);
+    initButtons();
+  }
+
+  private void initColors() {
     colors = new Color[9];
     colors[0] = Color.WHITE;
     colors[1] = Color.BLUE;
@@ -64,8 +72,27 @@ public class GridPanel extends JPanel implements ActionListener  {
     colors[6] = Color.BLACK;
     colors[7] = Color.BLACK;
     colors[8] = Color.BLACK;
+    // initColor = Color.GRAY;
+    initColor = new Color(192,192,192);
+
     Font font = getFont();
     boldFont = new Font(font.getName(), Font.BOLD, font.getSize());
+  }
+
+  private void initButtons() {
+    Matrix matrix = game.getUser();
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        JButton button = buttons[i * width + j];
+        // button.setText("" + matrix.get(i.j));
+        button.setText("X");
+        button.addActionListener(this);
+        button.setForeground(Color.BLACK);
+        button.setBackground(initColor);
+        button.setOpaque(true);
+        // button.setBorderPainted(false);
+      }
+    }
   }
 
   private void initGame(int height, int width, int nBombs) {
@@ -96,12 +123,27 @@ public class GridPanel extends JPanel implements ActionListener  {
     modifiers &= 15;
     int k = (modifiers==0)?0:1;
     System.err.println("i=" + i + " j=" + j + " k=" + k);
-    //
+
     int s = game.turn(i, j, k);
-    //
+    updateButtons();
+
+    if (s == 0) {
+      return;
+    }
+    else if (s < 0) {
+      JOptionPane.showMessageDialog(null, "Game Over!");
+    }
+    else {
+      JOptionPane.showMessageDialog(null, "Congratulations!");
+    }
+    initGame(height, width, nBombs);
+    initButtons();
+  }
+
+  private void updateButtons() {
     Matrix matrix = game.getUser();
-    for (i = 0; i < height; i++) {
-      for (j = 0; j < width; j++) {
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
          char c = matrix.get(i, j);
          JButton button = buttons[i * width + j];
          if (c >= '0' && c <= '8') {
