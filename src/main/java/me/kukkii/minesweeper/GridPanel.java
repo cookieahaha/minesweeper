@@ -54,15 +54,28 @@ public class GridPanel extends JPanel implements ActionListener  {
     }
     int i = n / width;
     int j = n % width;
-    System.err.println("i=" + i + " j=" + j);
+    int modifiers = ae.getModifiers();
+    /*
+     *  1 control
+     *  2 shift
+     *  4 command
+     *  8 option
+     * 16 (always?)
+     */
+    modifiers &= 15;
+    int k = (modifiers==0)?0:1;
+    System.err.println("i=" + i + " j=" + j + " k=" + k);
     //
-    int s = game.turn(i, j, 0);
+    int s = game.turn(i, j, k);
     //
     Matrix matrix = game.getUser();
     for (i = 0; i < height; i++) {
       for (j = 0; j < height; j++) {
          char c = matrix.get(i, j);
          buttons[i * width + j].setText("" + c);
+         if (c == ' ' || (c >= '1' && c <= '8')) {
+           buttons[i * width + j].removeActionListener(this);
+         }
       }
     }
   }
