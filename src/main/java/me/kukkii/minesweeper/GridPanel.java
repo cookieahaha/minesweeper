@@ -24,6 +24,7 @@ public class GridPanel extends JPanel implements ActionListener  {
   private int height;
   private int width;
   private int nBombs;
+  private long startTime;
 
   private JButton[] buttons;
 
@@ -61,7 +62,7 @@ public class GridPanel extends JPanel implements ActionListener  {
   }
 
   private void initColors() {
-    colors = new Color[9];
+    colors = new Color[10];
     colors[0] = Color.WHITE;
     colors[1] = Color.BLUE;
     // colors[2] = Color.GREEN;
@@ -72,6 +73,7 @@ public class GridPanel extends JPanel implements ActionListener  {
     colors[6] = Color.BLACK;
     colors[7] = Color.BLACK;
     colors[8] = Color.BLACK;
+    colors[9] = Color.BLACK;
     // initColor = Color.GRAY;
     initColor = new Color(192,192,192);
 
@@ -99,6 +101,7 @@ public class GridPanel extends JPanel implements ActionListener  {
     game = new Minesweeper(height,width,nBombs);
     game.setBombs();
     game.checkAll();
+    startTime = System.currentTimeMillis();
   }
 
   public void actionPerformed(ActionEvent ae) {
@@ -125,28 +128,30 @@ public class GridPanel extends JPanel implements ActionListener  {
     System.err.println("i=" + i + " j=" + j + " k=" + k);
 
     int s = game.turn(i, j, k);
-    updateButtons();
+    updateButtons(game.getUser());
 
     if (s == 0) {
       return;
     }
     else if (s < 0) {
+      updateButtons(game.getAdmin());
       JOptionPane.showMessageDialog(null, "Game Over!");
     }
     else {
-      JOptionPane.showMessageDialog(null, "Congratulations!");
+      long time = System.currentTimeMillis() - startTime;
+      time /= 1000;
+      JOptionPane.showMessageDialog(null, "Congratulations! " + time + " seconds");
     }
     initGame(height, width, nBombs);
     initButtons();
   }
 
-  private void updateButtons() {
-    Matrix matrix = game.getUser();
+  private void updateButtons(Matrix matrix) {
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
          char c = matrix.get(i, j);
          JButton button = buttons[i * width + j];
-         if (c >= '0' && c <= '8') {
+         if (c >= '0' && c <= '9') {
            button.setForeground(colors[c - '0']);
            button.setFont(boldFont);
          }

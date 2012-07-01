@@ -7,6 +7,7 @@ public class Minesweeper{
   private int amountOfBomb = 1;
   private Matrix user;
   private Matrix admin;
+  private int status = 0;
 
   public Minesweeper(int height,int width,int amountOfBomb){
     this.height = height;
@@ -15,6 +16,7 @@ public class Minesweeper{
     
     user = new Matrix(height,width,'X');
     admin = new Matrix(height,width,'0');
+    status = 0;
   }
 
   public int getHeight(){
@@ -27,6 +29,13 @@ public class Minesweeper{
 
   public Matrix getUser(){
     return user;
+  }
+
+  public Matrix getAdmin(){
+    if (status == 0) {
+      return null;
+    }
+    return admin;
   }
 
   public void setBombs(){
@@ -102,6 +111,9 @@ public class Minesweeper{
   }
 
   public int turn(int i, int j,int k){
+    if (status != 0) {
+      return status;
+    }
     if(k==1){
       if(user.get(i,j)!='X'){
         System.out.println("cannot put a flag here");
@@ -114,7 +126,8 @@ public class Minesweeper{
     if(admin.get(i,j)=='9'){
         System.out.println("game over");
         admin.print();
-        return -1;
+        status = -1;
+        return status;
     }
     else{
       if(user.get(i,j)=='F'){
@@ -122,7 +135,8 @@ public class Minesweeper{
       }
       this.open(i,j);
       user.print();
-      return this.win();
+      status = win();
+      return status;
     }
   }
 
