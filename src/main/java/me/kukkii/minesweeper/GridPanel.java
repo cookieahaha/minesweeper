@@ -3,6 +3,7 @@
 package me.kukkii.minesweeper;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -133,14 +134,23 @@ public class GridPanel extends JPanel implements ActionListener  {
     if (s == 0) {
       return;
     }
-    else if (s < 0) {
+    Container container = this;
+    while (true) {
+      Container parent = container.getParent();
+      if (parent == null) {
+        break;
+      }
+      container = parent;
+    }
+    
+    if (s < 0) {
       updateButtons(game.getAdmin());
-      JOptionPane.showMessageDialog(null, "Game Over!");
+      JOptionPane.showMessageDialog((JFrame)container, "Game Over!");
     }
     else {
       long time = System.currentTimeMillis() - startTime;
       time /= 1000;
-      JOptionPane.showMessageDialog(null, "Congratulations! " + time + " seconds");
+      JOptionPane.showMessageDialog((JFrame)container, "Congratulations! - " + time + " seconds");
     }
     initGame(height, width, nBombs);
     initButtons();
