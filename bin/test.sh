@@ -1,2 +1,7 @@
 #!/bin/sh
-java -classpath target/classes me.kukkii.minesweeper.Matrix $*
+
+# CLASS=Matrix
+# CLASS=UI
+CLASS=GridPanel
+
+java -classpath target/classes me.kukkii.minesweeper.${CLASS} $*
