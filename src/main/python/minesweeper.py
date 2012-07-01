@@ -16,10 +16,10 @@ class Mat:
 			self.x.append([c]*w)
 
 	def mprint(self):
-		print '  012345678'
-		print ' +---------'
+		print '  012345678901234567890123456789'
+		print ' +------------------------------'
 		for i in range(0,self.h):
-			sys.stdout.write(chr(ord('0')+i))
+			sys.stdout.write(chr(ord('0')+(i%10)))
 			sys.stdout.write('|')
 			for j in range(0,self.w):
 				s=self.mget(i,j)
@@ -159,7 +159,7 @@ class MineSweeper:
 		if i<=self.h-2 and j<=self.w-2:
 			self.open(i+1,j+1)
 
-ms=MineSweeper(10,20,20)
+ms=MineSweeper(16,30,99)
 ms.setBombs()
 ms.checkAll()	
 #ms.admin.mprint()

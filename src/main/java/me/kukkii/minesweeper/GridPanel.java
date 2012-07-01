@@ -73,7 +73,7 @@ public class GridPanel extends JPanel implements ActionListener  {
       for (j = 0; j < height; j++) {
          char c = matrix.get(i, j);
          buttons[i * width + j].setText("" + c);
-         if (c == ' ' || (c >= '1' && c <= '8')) {
+         if (c == ' ' || (c >= '0' && c <= '8')) {
            buttons[i * width + j].removeActionListener(this);
          }
       }
