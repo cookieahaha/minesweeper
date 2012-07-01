@@ -59,10 +59,30 @@ public class Matrix{
   //
 
   public static void main(String[] args) throws Exception {
-    Matrix matrix = new Matrix(20,20, '.');
-    for (int i = 0; i < 20; i++) {
+    int height = 20;
+    int width = 20;
+    if (args.length > 0) {
+      height = Integer.parseInt(args[0]);
+      if (args.length > 1) {
+        width = Integer.parseInt(args[1]);
+      }
+      else {
+        width = height;
+      }
+    }
+
+    Matrix matrix = new Matrix(height,width, '.');
+    int n = height;
+    if (width < n) {
+      n = width;
+    }
+    for (int i = 0; i < n; i++) {
       matrix.set(i, i, '\\');
-      matrix.set(i, 19-i, '/');
+      char c = '/';
+      if (matrix.get(i,n-1-i) == '\\') {
+        c = 'X';
+      }
+      matrix.set(i, n-1-i, c);
     }
     matrix.print();
   }
