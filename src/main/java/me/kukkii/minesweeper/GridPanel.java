@@ -32,6 +32,8 @@ public class GridPanel extends JPanel implements ActionListener  {
   private Minesweeper game;
   private Color[] colors;
   private Color initColor;
+  private Color safeColor;
+  private Color bombColor;
   private Font boldFont;
 
   public GridPanel(int height, int width, int nBombs) {
@@ -77,6 +79,8 @@ public class GridPanel extends JPanel implements ActionListener  {
     colors[9] = Color.BLACK;
     // initColor = Color.GRAY;
     initColor = new Color(192,192,192);
+    safeColor = new Color(192,192,255);
+    bombColor = new Color(255,192,192);
 
     Font font = getFont();
     boldFont = new Font(font.getName(), Font.BOLD, font.getSize());
@@ -129,7 +133,10 @@ public class GridPanel extends JPanel implements ActionListener  {
     System.err.println("i=" + i + " j=" + j + " k=" + k);
 
     int s = game.turn(i, j, k);
-    updateButtons(game.getUser());
+    Matrix matrix = game.getUser();
+    Analyzer analyzer = new Analyzer(matrix);
+    analyzer.check();
+    updateButtons(matrix);
 
     if (s == 0) {
       return;
@@ -161,7 +168,13 @@ public class GridPanel extends JPanel implements ActionListener  {
       for (int j = 0; j < width; j++) {
          char c = matrix.get(i, j);
          JButton button = buttons[i * width + j];
+         if (c == 'A') {
+           button.setBackground(safeColor);
+         }
          if (c >= '0' && c <= '9') {
+           if (c == '9') {
+             button.setBackground(bombColor);
+           }
            button.setForeground(colors[c - '0']);
            button.setFont(boldFont);
          }

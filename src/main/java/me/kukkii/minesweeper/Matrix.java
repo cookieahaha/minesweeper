@@ -56,6 +56,16 @@ public class Matrix{
     System.out.flush();
   }
 
+  public Matrix copy() {
+    Matrix copy = new Matrix(height, width, ' ');
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        copy.set(i, j, get(i,j));
+      }
+    }
+    return copy;
+  }
+
   //
 
   public static void main(String[] args) throws Exception {

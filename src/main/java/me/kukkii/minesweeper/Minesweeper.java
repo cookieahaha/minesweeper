@@ -28,7 +28,7 @@ public class Minesweeper{
   }
 
   public Matrix getUser(){
-    return user;
+    return user.copy();
   }
 
   public Matrix getAdmin(){
