@@ -69,7 +69,7 @@ public class Analyzer2 {
         unknowns.add(k);
       }
     }
-    // printSet("unknows=", unknowns);
+    // printSet("unknowns=", unknowns);
     return unknowns;
   }
 
@@ -114,7 +114,10 @@ public class Analyzer2 {
       int n = checkAroundAllOnce();
       System.err.println("checked -> " + n);
       if (n == 0) {
-        break;
+        n = checkAllDistance2();
+        if (n == 0) {
+          break;
+        }
       }
       count += n;
     }
@@ -189,4 +192,63 @@ public class Analyzer2 {
     System.err.println();
   }
 
+  //
+
+  private int checkAllDistance2() {
+    for (int n = 0; n < height * width; n++) {
+      int count = checkDistance2(n);
+      if (count > 0) {
+        return count;
+      }
+    }
+    return 0;
+  }
+
+  private int checkDistance2(int n) {
+    char c = get(n);
+    if (c <= '0' || c >= '9') {
+      return 0;
+    }
+    Set<Integer> unknowns = getUnknownNeibors(n);
+    if (unknowns.size() == 0) {
+      return 0;
+    }
+    int nBombs = countBombs(n);
+    if (nBombs == 0) {
+      return 0;
+    }
+    for (int m : getOpenNeiborsNeibors(n)) {
+      int count = checkDistance2(n, unknowns, nBombs, m);
+      if (count > 0) {
+        return count;   
+      }
+    }
+    return 0;
+  }
+
+  private int checkDistance2(int n, Set<Integer> unknowns, int nBombs, int m) {
+    int nBombs2 = countBombs(m);
+    if (nBombs2 == 0) {
+      return 0;
+    }
+    Set<Integer> unknowns2 = getUnknownNeibors(m);
+    if (unknowns2.size() == 0) {
+      return 0;
+    }
+    if (! unknowns2.containsAll(unknowns)) {
+      return 0;
+    }
+    int nDiff = unknowns2.size() - unknowns.size();
+    if (nDiff == 0) {
+      return 0;
+    }
+    unknowns2.removeAll(unknowns);
+    if (nDiff == nBombs2 - nBombs) {
+      return setBombs(unknowns2);
+    }
+    if (nBombs2 == nBombs) {
+      return setNoBombs(unknowns2);
+    }
+    return 0;
+  }
 }
