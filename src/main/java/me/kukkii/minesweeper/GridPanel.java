@@ -18,6 +18,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.synth.SynthLookAndFeel;
 
+import me.kukkii.minesweeper.Analyzer2;
+
 public class GridPanel extends JPanel implements ActionListener  {
 
   private static final int LEN = 24;
@@ -134,7 +136,8 @@ public class GridPanel extends JPanel implements ActionListener  {
 
     int s = game.turn(i, j, k);
     Matrix matrix = game.getUser();
-    Analyzer analyzer = new Analyzer(matrix);
+    // Analyzer analyzer = new Analyzer(matrix);
+    Analyzer2 analyzer = new Analyzer2(matrix);
     analyzer.check();
     updateButtons(matrix);
 
